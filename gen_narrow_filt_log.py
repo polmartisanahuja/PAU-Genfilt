@@ -1,24 +1,25 @@
 import filt_functions as ft
 import numpy as np
 import os as os
-#from pau_narrow_parameters_genfilt import *
-#from pau_narrow_parameters_genfilt_x0_5width import *
-#from pau_narrow_parameters_genfilt_x1_5width import *
-#from pau_narrow_parameters_genfilt_redshift import *
-from pau_narrow_parameters_genfilt_blueshift import *
+from pau_narrow_parameters_genfilt_log import *
+
+Ctn = Dx0 / x0
 
 #Compute filters..........................................................
+x_init = x0
 for i in range(n_filt):
-	x_init = x0 + i * Dx
-	print x_init
+	Dx = Ctn * x_init	
+	#x_step = Dx / n_x_step
+	print x_init, Dx, x_step
 
 	#Theoretical
 	lam, R = ft.gen_filt(x_init, Dx , dx, x_step)
-	np.savetxt(theo_filt_folder + str(x_init) + ".res", np.array([lam, R]).T, fmt = ["%2.2f", "%5.5f"])
+	np.savetxt(theo_filt_folder + str(int(x_init)) + ".res", np.array([lam, R]).T, fmt = ["%2.2f", "%5.5f"])
 
 	#Effective
 	eff_R = ft.gen_effect_filt(lam, R, trans_folder)
-	np.savetxt(effect_filt_folder + str(x_init) + ".res", np.array([lam, eff_R]).T, fmt = ["%2.2f", "%5.5f"])
+	np.savetxt(effect_filt_folder + str(int(x_init)) + ".res", np.array([lam, eff_R]).T, fmt = ["%2.2f", "%5.5f"])
+	x_init += Dx
 
 #Plot set of narrow filt.................................................
 

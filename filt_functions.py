@@ -12,11 +12,17 @@ def gen_filt(x0, Dx, dx, x_step):
 	if(Dx == 0): sys.exit("Filter width must be non-zero")
 	if(dx == 0): dx = 0.01 * Dx 
 	
-	y = np.array([0,0.95,0.95,0])
+	y = np.array([0,1.,1.,0])
 	x = np.array([x0 - dx, x0, x0 + Dx, x0 + Dx + dx])
 	
-	new_x = np.arange(x[0],x[3] + x_step, x_step)
+	#new_x = np.arange(x[0],x[3] + x_step, x_step)
+	new_x = np.arange(x[0],x[3], x_step)
+	new_x = np.append(new_x, [x[3]])
 	new_y = interpol(x, new_x, y)
+	
+	tx, ty = np.loadtxt("../../Data/Filter/narrow_filter.txt", unpack = True)
+	t = sp.interpolate.interp1d(tx,ty)
+	new_y *=  t(new_x)
 	
 	return new_x, new_y
 	
